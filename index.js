@@ -17,6 +17,7 @@ var post = mongoose.model("post", blogPostSchema);
 
 app.post("/addPost", (req, res) => {
     var newPost = new post(req.body);
+    console.log(req.body);
     newPost.save((err,record) => {
     	if(err) {
     		return res.send("Couldnt save data in database");	

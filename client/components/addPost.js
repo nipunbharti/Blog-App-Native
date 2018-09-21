@@ -12,40 +12,66 @@ class AddPost extends React.Component {
     }
   }
 
-  changeTextHandler = (text, type) => {
-    if(type == 'H'){
-      this.setState({heading: text});
-    }
-    else if(type == 'C'){
-      this.setState({content: text});
-    }
-    else{
-      this.setState({author: text});
-    }
+  changeTextHandlerHeading = (text) => {
+    this.setState({heading: text});
+  }
+
+  changeTextHandlerContent = (text) => {
+    this.setState({content: text});
+  }
+
+  changeTextHandlerAuthor = (text) => {
+    this.setState({author: text});
+  }
+
+  handleClick = () => {
+    console.log(this.state.author);
+    console.log(this.state.heading);
+    console.log(this.state.content);
+    fetch('http://10.0.0.14:1234/addPost', {
+      method: 'POST',
+      body: JSON.stringify({
+        author: this.state.author,
+        content: this.state.content,
+        header: this.state.heading,
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+        console.log(responseJson);
+        this.props.navigation.navigate('Home');
+    })
+    .catch((error) => {
+        console.error(error);
+    });
   }
 
   render() {
     return (
       <View style={styles.container}>
         <TextInput 
-          onChangeText={() => this.changeTextHandler('H')}
+          onChangeText={this.changeTextHandlerHeading}
           placeholder="Heading"
           value={this.state.heading}
           style={styles.textInput}
         />
         <TextInput 
-          onChangeText={() => this.changeTextHandler('C')}
+          onChangeText={this.changeTextHandlerContent}
           placeholder="Content"
-          value={this.state.heading}
+          value={this.state.content}
           style={styles.textInput}
         />
         <TextInput 
-          onChangeText={() => this.changeTextHandler('A')}
+          onChangeText={this.changeTextHandlerAuthor}
           placeholder="Author"
-          value={this.state.heading}
+          value={this.state.author}
           style={styles.textInput}
         />
-        <Button title="Add post" style={styles.submitButton} />
+        <Button title="Add post" style={styles.submitButton} onPress={this.handleClick}/>
       </View>
     );
   }
